@@ -16,7 +16,7 @@ pub fn dump_store_new_file(store: &mut HashMap<String, String>) {
     store.clear();
 }
 
-fn get_sorted_json_files(dir_path: &str) -> io::Result<Vec<PathBuf>> {
+pub fn get_sorted_json_files(dir_path: &str) -> io::Result<Vec<PathBuf>> {
     let entries = fs::read_dir(dir_path)?;
 
     let mut files: Vec<PathBuf> = entries
@@ -36,7 +36,7 @@ pub fn find_key_in_dump(key: &String) -> Option<String> {
 
     for path in file_paths {
         println!("Searching for key {} in file {}", key, path.file_name().unwrap().to_str().unwrap());
-        
+
         let file = File::open(path).unwrap();
         let reader = BufReader::new(file);
 
@@ -47,6 +47,6 @@ pub fn find_key_in_dump(key: &String) -> Option<String> {
             return Some(value.clone());
         }
     }
-    
+
     None
 }
