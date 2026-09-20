@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::{fs, io};
 use std::fs::File;
-use std::io::BufReader;
+use std::io::{BufReader, BufWriter, Write};
 use std::path::PathBuf;
 use chrono::Local;
 
@@ -49,4 +49,18 @@ pub fn find_key_in_dump(key: &String) -> Option<String> {
     }
 
     None
+}
+
+pub fn read_delete_info_into_map() -> HashMap<String, String> {
+    File::open("delete_info.json")
+        .ok()
+        .and_then(|file| serde_json::from_reader(BufReader::new(file)).ok())
+        .unwrap_or_default()
+}
+
+pub fn write_delete_info_into_file(delete_info_map: HashMap<String, String>) {
+    let file = File::create("delete_info.json").unwrap();
+    let mut writer = BufWriter::new(file);
+    serde_json::to_writer_pretty(&mut writer, &delete_info_map).unwrap();
+    writer.flush().unwrap();
 }
