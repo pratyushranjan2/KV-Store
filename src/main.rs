@@ -5,6 +5,7 @@ use crate::db::DB;
 mod db;
 mod file_ops;
 mod compaction;
+mod cleanup;
 
 fn main() {
     let mut db = db::DB::new();

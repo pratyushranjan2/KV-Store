@@ -1,5 +1,6 @@
 use crate::file_ops;
 use crate::compaction;
+use crate::cleanup;
 
 use std::collections::HashMap;
 
@@ -12,6 +13,7 @@ pub struct DB {
 impl DB {
     pub fn new() -> DB {
         compaction::start_compaction_worker();
+        cleanup::start_cleanup_worker();
         DB { store: HashMap::new() }
     }
 
