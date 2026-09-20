@@ -4,6 +4,7 @@ use std::fs::File;
 use std::io::{BufReader, BufWriter, Write};
 use std::path::PathBuf;
 use chrono::Local;
+use crate::state::LATEST_DELETE_TIMESTAMP_FILE;
 
 pub fn dump_store_new_file(store: &mut HashMap<String, String>) {
     let timestamp = Local::now().format("%Y%m%d%H%M%S%f").to_string();
@@ -33,9 +34,12 @@ pub fn get_sorted_json_files(dir_path: &str) -> io::Result<Vec<PathBuf>> {
 
 pub fn find_key_in_dump(key: &String) -> Option<String> {
     let file_paths = get_sorted_json_files("data").unwrap();
+    let latest_delete_timestamp = LATEST_DELETE_TIMESTAMP_FILE.read().unwrap();
 
     for path in file_paths {
-        println!("Searching for key {} in file {}", key, path.file_name().unwrap().to_str().unwrap());
+        if path.file_name().unwrap().to_str().unwrap() <= latest_delete_timestamp.as_str() {
+            break;
+        }
 
         let file = File::open(path).unwrap();
         let reader = BufReader::new(file);

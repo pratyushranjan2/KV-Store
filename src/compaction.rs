@@ -1,18 +1,13 @@
 use crate::file_ops;
 
+use crate::state::LATEST_DELETE_TIMESTAMP_FILE;
+use chrono::{Duration, Local};
+use core::time::Duration as StdDuration;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufReader, BufWriter, Write};
 use std::path::PathBuf;
 use std::thread;
-use chrono::{Duration, Local};
-use core::time::Duration as StdDuration;
-use std::sync::{LazyLock, RwLock};
-use log::{debug, info};
-
-static LATEST_DELETE_TIMESTAMP_FILE: LazyLock<RwLock<String>> = LazyLock::new(|| {
-    RwLock::new(String::from("00000000000000000000000.json"))
-});
 
 // file_path1 is older
 fn compact(file_path1: &PathBuf, file_path2: &PathBuf) {

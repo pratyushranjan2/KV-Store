@@ -25,11 +25,10 @@ impl DB {
         }
     }
 
-    pub fn get(&mut self, key: String) -> Option<String> {
+    pub async fn get(&self, key: String) -> Option<String> {
         if let Some(value) = self.store.get(&key) {
             return Some(value.clone());
         }
-        println!("Could not find key {} in in-mem hash map", key);
         
         if let Some(value) = file_ops::find_key_in_dump(&key) {
             return Some(value)
